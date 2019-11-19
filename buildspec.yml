@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  install:
+    runtim-versions:
+      docker: 18
+  pre_build:
+    commands:
+      - echo "Loggin into ECR....."
+      - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+      - REPOSITORY_URI = 951822832165.dkr.ecr.us-east-1.amazonaws.com/pipeline-base-ecr-repo
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG = ${COMMIT_HASH}
+  build:
+    commands:
+      - echo "Build started on `date`"
+      - echo "Building docker image..."
+      - docker build -t $REPOSITORY_URI:latest .
+      - docker tag $REPOSITORY_URI:latest 199852143536.dkr.ecr.eu-west-1.amazonaws.com/nginx:$IMAGE_TAG
+  post_build:
+    commands:
+      - echo "Build completed on `date`"
+      - echo "Pushing docker image o Repo..."
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
