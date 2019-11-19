@@ -10,7 +10,7 @@ phases:
       - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
       - REPOSITORY_URI=951822832165.dkr.ecr.us-east-1.amazonaws.com/pipeline-base-ecr-repo
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG = ${COMMIT_HASH}
+      - IMAGE_TAG=${COMMIT_HASH}
   build:
     commands:
       - echo "Build started on `date`"
