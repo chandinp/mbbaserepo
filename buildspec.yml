@@ -2,7 +2,7 @@ version: 0.2
 
 phases:
   install:
-    runtim-versions:
+    runtime-versions:
       docker: 18
   pre_build:
     commands:
